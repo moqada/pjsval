@@ -1,0 +1,60 @@
+package pjsval
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"go/format"
+	"io"
+	"strings"
+
+	"github.com/achiku/varfmt"
+	"github.com/lestrrat/go-jshschema"
+	"github.com/lestrrat/go-jspointer"
+	"github.com/lestrrat/go-jsval"
+	"github.com/lestrrat/go-jsval/builder"
+)
+
+// Generate validator source code
+func Generate(in io.Reader, out io.Writer, pkg string) error {
+	var m map[string]interface{}
+	if err := json.NewDecoder(in).Decode(&m); err != nil {
+		return err
+	}
+	validators := []*jsval.JSVal{}
+	for k, v := range m["properties"].(map[string]interface{}) {
+		ptr := v.(map[string]interface{})["$ref"].(string)
+		resolver, err := jspointer.New(ptr[1:])
+		if err != nil {
+			return err
+		}
+		resolved, err := resolver.Get(m)
+		if err != nil {
+			return err
+		}
+		hsc := hschema.New()
+		hsc.Extract(resolved.(map[string]interface{}))
+		for _, link := range hsc.Links {
+			if link.Schema != nil {
+				b := builder.New()
+				v, err := b.BuildWithCtx(link.Schema, m)
+				if err != nil {
+					return err
+				}
+				v.Name = varfmt.PublicVarName(strings.ToLower(k) + "_" + strings.ToLower(link.Method) + "_" + link.Rel)
+				validators = append(validators, v)
+			}
+		}
+	}
+	g := jsval.NewGenerator()
+	var src bytes.Buffer
+	fmt.Fprintln(&src, "package "+pkg)
+	fmt.Fprintf(&src, "import \"github.com/lestrrat/go-jsval\"")
+	g.Process(&src, validators...)
+	b, err := format.Source(src.Bytes())
+	if err != nil {
+		return err
+	}
+	out.Write(b)
+	return nil
+}

@@ -1,0 +1,5 @@
+gom 'github.com/achiku/varfmt'
+gom 'github.com/lestrrat/go-jshschema'
+gom "github.com/lestrrat/go-jspointer"
+gom "github.com/lestrrat/go-jsval"
+gom "github.com/lestrrat/go-jsval/builder"
