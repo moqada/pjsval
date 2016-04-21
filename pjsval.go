@@ -15,13 +15,25 @@ import (
 	"github.com/lestrrat/go-jsval/builder"
 )
 
+type validatorList []*jsval.JSVal
+
+func (vl validatorList) Len() int {
+	return len(vl)
+}
+func (vl validatorList) Swap(i, j int) {
+	vl[i], vl[j] = vl[j], vl[i]
+}
+func (vl validatorList) Less(i, j int) bool {
+	return vl[i].Name < vl[j].Name
+}
+
 // Generate validator source code
 func Generate(in io.Reader, out io.Writer, pkg string) error {
 	var m map[string]interface{}
 	if err := json.NewDecoder(in).Decode(&m); err != nil {
 		return err
 	}
-	validators := []*jsval.JSVal{}
+	validators := validatorList{}
 	for k, v := range m["properties"].(map[string]interface{}) {
 		ptr := v.(map[string]interface{})["$ref"].(string)
 		resolver, err := jspointer.New(ptr[1:])
@@ -41,7 +53,7 @@ func Generate(in io.Reader, out io.Writer, pkg string) error {
 				if err != nil {
 					return err
 				}
-				v.Name = varfmt.PublicVarName(strings.ToLower(k) + "_" + strings.ToLower(link.Method) + "_" + link.Rel)
+				v.Name = varfmt.PublicVarName(strings.ToLower(k) + "_" + link.Rel + "_validator")
 				validators = append(validators, v)
 			}
 		}

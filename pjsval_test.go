@@ -22,8 +22,8 @@ func ExampleGenerate() {
 	//
 	// import "github.com/lestrrat/go-jsval"
 	//
-	// var UserGetSelf *jsval.JSVal
-	// var UserPostCreate *jsval.JSVal
+	// var UserCreateValidator *jsval.JSVal
+	// var UserSelfValidator *jsval.JSVal
 	// var M *jsval.ConstraintMap
 	// var R0 jsval.Constraint
 	// var R1 jsval.Constraint
@@ -37,20 +37,7 @@ func ExampleGenerate() {
 	// 	M.SetReference("#/definitions/user/definitions/birthday", R0)
 	// 	M.SetReference("#/definitions/user/definitions/firstName", R1)
 	// 	M.SetReference("#/definitions/user/definitions/lastName", R2)
-	// 	UserGetSelf = jsval.New().
-	// 		SetConstraintMap(M).
-	// 		SetRoot(
-	// 			jsval.Object().
-	// 				AdditionalProperties(
-	// 					jsval.EmptyConstraint,
-	// 				).
-	// 				AddProp(
-	// 					"fields",
-	// 					jsval.String(),
-	// 				),
-	// 		)
-	//
-	// 	UserPostCreate = jsval.New().
+	// 	UserCreateValidator = jsval.New().
 	// 		SetConstraintMap(M).
 	// 		SetRoot(
 	// 			jsval.Object().
@@ -69,6 +56,19 @@ func ExampleGenerate() {
 	// 				AddProp(
 	// 					"lastName",
 	// 					jsval.Reference(M).RefersTo("#/definitions/user/definitions/lastName"),
+	// 				),
+	// 		)
+	//
+	// 	UserSelfValidator = jsval.New().
+	// 		SetConstraintMap(M).
+	// 		SetRoot(
+	// 			jsval.Object().
+	// 				AdditionalProperties(
+	// 					jsval.EmptyConstraint,
+	// 				).
+	// 				AddProp(
+	// 					"fields",
+	// 					jsval.String(),
 	// 				),
 	// 		)
 	//
