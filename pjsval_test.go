@@ -22,6 +22,7 @@ func ExampleGenerate() {
 	//
 	// import "github.com/lestrrat/go-jsval"
 	//
+	// var InfoInstancesValidator *jsval.JSVal
 	// var UserCreateValidator *jsval.JSVal
 	// var UserSelfValidator *jsval.JSVal
 	// var M *jsval.ConstraintMap
@@ -37,6 +38,12 @@ func ExampleGenerate() {
 	// 	M.SetReference("#/definitions/user/definitions/birthday", R0)
 	// 	M.SetReference("#/definitions/user/definitions/firstName", R1)
 	// 	M.SetReference("#/definitions/user/definitions/lastName", R2)
+	// 	InfoInstancesValidator = jsval.New().
+	// 		SetConstraintMap(M).
+	// 		SetRoot(
+	// 			jsval.EmptyConstraint,
+	// 		)
+	//
 	// 	UserCreateValidator = jsval.New().
 	// 		SetConstraintMap(M).
 	// 		SetRoot(

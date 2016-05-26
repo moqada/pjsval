@@ -47,15 +47,19 @@ func Generate(in io.Reader, out io.Writer, pkg string) error {
 		hsc := hschema.New()
 		hsc.Extract(resolved.(map[string]interface{}))
 		for _, link := range hsc.Links {
-			if link.Schema != nil {
+			var v *jsval.JSVal
+			if link.Schema == nil {
+				v = jsval.New()
+				v.SetRoot(jsval.Any())
+			} else {
 				b := builder.New()
-				v, err := b.BuildWithCtx(link.Schema, m)
+				v, err = b.BuildWithCtx(link.Schema, m)
 				if err != nil {
 					return err
 				}
-				v.Name = varfmt.PublicVarName(strings.ToLower(k) + "_" + link.Rel + "_validator")
-				validators = append(validators, v)
 			}
+			v.Name = varfmt.PublicVarName(strings.ToLower(k) + "_" + link.Rel + "_validator")
+			validators = append(validators, v)
 		}
 	}
 	g := jsval.NewGenerator()
