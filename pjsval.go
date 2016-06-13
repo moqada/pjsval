@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"go/format"
 	"io"
-	"strings"
 
 	"github.com/achiku/varfmt"
 	"github.com/lestrrat/go-jshschema"
@@ -58,7 +57,7 @@ func Generate(in io.Reader, out io.Writer, pkg string) error {
 					return err
 				}
 			}
-			v.Name = varfmt.PublicVarName(strings.ToLower(k) + "_" + link.Rel + "_validator")
+			v.Name = varfmt.PublicVarName(k + "_" + link.Rel + "_validator")
 			validators = append(validators, v)
 		}
 	}
