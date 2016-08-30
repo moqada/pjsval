@@ -57,7 +57,7 @@ func Generate(in io.Reader, out io.Writer, pkg string) error {
 					return err
 				}
 			}
-			v.Name = varfmt.PublicVarName(k + "_" + link.Rel + "_validator")
+			v.Name = varfmt.PublicVarName(k + varfmt.PublicVarName(link.Rel) + "Validator")
 			validators = append(validators, v)
 		}
 	}
