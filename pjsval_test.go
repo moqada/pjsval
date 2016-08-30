@@ -39,12 +39,14 @@ func ExampleGenerate() {
 	// 	M.SetReference("#/definitions/user/definitions/firstName", R1)
 	// 	M.SetReference("#/definitions/user/definitions/lastName", R2)
 	// 	InfoInstancesValidator = jsval.New().
+	// 		SetName("InfoInstancesValidator").
 	// 		SetConstraintMap(M).
 	// 		SetRoot(
 	// 			jsval.EmptyConstraint,
 	// 		)
 	//
 	// 	UserCreateValidator = jsval.New().
+	// 		SetName("UserCreateValidator").
 	// 		SetConstraintMap(M).
 	// 		SetRoot(
 	// 			jsval.Object().
@@ -67,6 +69,7 @@ func ExampleGenerate() {
 	// 		)
 	//
 	// 	UserSelfValidator = jsval.New().
+	// 		SetName("UserSelfValidator").
 	// 		SetConstraintMap(M).
 	// 		SetRoot(
 	// 			jsval.Object().
